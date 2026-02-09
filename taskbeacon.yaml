@@ -1,0 +1,11 @@
+id: T000009
+slug: prl
+title: "Probabilistic Reversal Learning (PRL) Task"
+acquisition: eeg
+variant: baseline
+cognitive_domain: []
+maturity: piloted
+version:
+  release_tag: ""
+evidence: []
+maintainer: []
