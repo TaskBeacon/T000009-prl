@@ -1,17 +1,17 @@
-from psyflow import StimUnit
+﻿from psyflow import StimUnit
 from functools import partial
 from .utils import Controller  
 import numpy as np
-def run_trial(win, kb,settings, condition, stim_bank, controller, trigger_sender=None):        
+def run_trial(win, kb,settings, condition, stim_bank, controller, trigger_runtime=None):        
     """
     Single PRL trial:
       1. fixation
       2. cue display + response highlight (via capture_response)
-      3. stochastic feedback (+10/–10 based on rand < win_prob)
+      3. stochastic feedback (+10/â€“10 based on rand < win_prob)
     Returns a dict with all trial data (including rand_val, win_prob, reversal_count).
     """
     trial_data = {"condition": condition}
-    make_unit = partial(StimUnit, win=win, kb=kb,  triggersender=trigger_sender)
+    make_unit = partial(StimUnit, win=win, kb=kb,  runtime=trigger_runtime)
     marker_pad = controller.reversal_count * 10
     # 1) Fixation
     make_unit(unit_label="fixation") \
@@ -97,3 +97,4 @@ def run_trial(win, kb,settings, condition, stim_bank, controller, trigger_sender
     fb.to_dict(trial_data)
 
     return trial_data
+
