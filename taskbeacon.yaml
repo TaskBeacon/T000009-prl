@@ -1,4 +1,4 @@
-id: T000009
+﻿id: T000009
 slug: prl
 title: "Probabilistic Reversal Learning (PRL) Task"
 acquisition: eeg
@@ -7,5 +7,7 @@ cognitive_domain: []
 maturity: piloted
 version:
   release_tag: ""
+contracts:
+  psyflow_taps: v0.1.0
 evidence: []
 maintainer: []

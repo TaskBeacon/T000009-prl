@@ -1,34 +1,74 @@
-﻿from psyflow import StimUnit
-from functools import partial
-from .utils import Controller  
-import numpy as np
-def run_trial(win, kb,settings, condition, stim_bank, controller, trigger_runtime=None):        
-    """
-    Single PRL trial:
-      1. fixation
-      2. cue display + response highlight (via capture_response)
-      3. stochastic feedback (+10/â€“10 based on rand < win_prob)
-    Returns a dict with all trial data (including rand_val, win_prob, reversal_count).
-    """
-    trial_data = {"condition": condition}
-    make_unit = partial(StimUnit, win=win, kb=kb,  runtime=trigger_runtime)
-    marker_pad = controller.reversal_count * 10
-    # 1) Fixation
-    make_unit(unit_label="fixation") \
-        .add_stim(stim_bank.get("fixation")) \
-        .show(
-            duration=settings.fixation_duration,
-            onset_trigger=settings.triggers.get("fixation_onset")+marker_pad,
-        ) \
-        .to_dict(trial_data)
+﻿from functools import partial
 
-    # 2) Cue + response collection
+import numpy as np
+
+from psyflow import StimUnit, set_trial_context
+from .utils import Controller
+
+# trial stages in contract order: cue -> anticipation -> target -> feedback
+_TRIAL_COUNTER = 0
+
+
+def _next_trial_id() -> int:
+    global _TRIAL_COUNTER
+    _TRIAL_COUNTER += 1
+    return _TRIAL_COUNTER
+
+
+def _deadline_s(value) -> float | None:
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, (list, tuple)) and value:
+        try:
+            return float(max(value))
+        except Exception:
+            return None
+    return None
+
+
+def run_trial(
+    win,
+    kb,
+    settings,
+    condition,
+    stim_bank,
+    controller,
+    trigger_runtime=None,
+    block_id=None,
+    block_idx=None,
+):
+    """Run one PRL trial."""
+    trial_id = _next_trial_id()
+    trial_data = {"condition": condition}
+    make_unit = partial(StimUnit, win=win, kb=kb, runtime=trigger_runtime)
+    marker_pad = controller.reversal_count * 10
+
+    # cue
+    # anticipation
+    fix_unit = make_unit(unit_label="fixation").add_stim(stim_bank.get("fixation"))
+    set_trial_context(
+        fix_unit,
+        trial_id=trial_id,
+        phase="anticipation",
+        deadline_s=_deadline_s(settings.fixation_duration),
+        valid_keys=list(settings.key_list),
+        block_id=block_id,
+        condition_id=str(condition),
+        task_factors={"condition": str(condition), "stage": "fixation", "block_idx": block_idx},
+        stim_id="fixation",
+    )
+    fix_unit.show(
+        duration=settings.fixation_duration,
+        onset_trigger=settings.triggers.get("fixation_onset") + marker_pad,
+    ).to_dict(trial_data)
+
+    # target
     if condition == "AB":
-        stima = stim_bank.rebuild('stima',pos=(-4,0))
-        stimb = stim_bank.rebuild('stimb',pos=(4,0))
-    elif condition == "BA":
-        stimb = stim_bank.rebuild('stimb',pos=(-4,0))
-        stima = stim_bank.rebuild('stima',pos=(4,0))
+        stima = stim_bank.rebuild("stima", pos=(-4, 0))
+        stimb = stim_bank.rebuild("stimb", pos=(4, 0))
+    else:
+        stimb = stim_bank.rebuild("stimb", pos=(-4, 0))
+        stima = stim_bank.rebuild("stima", pos=(4, 0))
 
     if controller.current_correct == "stima":
         correct_side = "left" if condition == "AB" else "right"
@@ -36,65 +76,64 @@ def run_trial(win, kb,settings, condition, stim_bank, controller, trigger_runtim
         correct_side = "left" if condition == "BA" else "right"
     correct_key = settings.left_key if correct_side == "left" else settings.right_key
 
-    cue = make_unit(unit_label="cue") \
-        .add_stim(stima) \
-        .add_stim(stimb)
+    cue = make_unit(unit_label="cue").add_stim(stima).add_stim(stimb)
+    set_trial_context(
+        cue,
+        trial_id=trial_id,
+        phase="target",
+        deadline_s=_deadline_s(settings.cue_duration),
+        valid_keys=list(settings.key_list),
+        block_id=block_id,
+        condition_id=str(condition),
+        task_factors={
+            "condition": str(condition),
+            "stage": "cue",
+            "current_correct": str(controller.current_correct),
+            "reversal_count": int(controller.reversal_count),
+            "block_idx": block_idx,
+        },
+        stim_id="choice_pair",
+    )
     cue.capture_response(
         keys=settings.key_list,
-        correct_keys = correct_key,
+        correct_keys=correct_key,
         duration=settings.cue_duration,
-        onset_trigger=settings.triggers.get("cue_onset")+marker_pad,
-        response_trigger=settings.triggers.get("key_press")+marker_pad,
-        timeout_trigger=settings.triggers.get("no_response")+marker_pad,
+        onset_trigger=settings.triggers.get("cue_onset") + marker_pad,
+        response_trigger=settings.triggers.get("key_press") + marker_pad,
+        timeout_trigger=settings.triggers.get("no_response") + marker_pad,
         terminate_on_response=False,
-        highlight_stim = {settings.left_key: stim_bank.get('highlight_left'), settings.right_key: stim_bank.get('highlight_right')},
+        highlight_stim={settings.left_key: stim_bank.get("highlight_left"), settings.right_key: stim_bank.get("highlight_right")},
         dynamic_highlight=False,
     )
-    
 
-    # 4) Probabilistic feedback
-    respond = cue.get_state('key_press', False)
+    respond = cue.get_state("key_press", False)
     win_prob = controller.get_win_prob()
     if respond:
         rand_val = np.random.rand()
-        hit = cue.get_state('hit', False)
+        hit = cue.get_state("hit", False)
         if hit:
             outcome = "win" if rand_val < win_prob else "lose"
-            delta = settings.delta if rand_val < win_prob else settings.delta*-1
+            delta = settings.delta if rand_val < win_prob else settings.delta * -1
         else:
             outcome = "win" if rand_val < (1 - win_prob) else "lose"
-            delta = settings.delta if rand_val < (1 - win_prob) else settings.delta*-1
+            delta = settings.delta if rand_val < (1 - win_prob) else settings.delta * -1
     else:
         outcome = "no_response"
-        delta = settings.delta*-1
+        delta = settings.delta * -1
         hit = False
         rand_val = np.nan
 
-    cue.set_state(outcome=outcome, 
-                  hit=hit, 
-                  delta=delta,
-                  win_prob=win_prob,
-                  rand_val=rand_val)
-
+    cue.set_state(outcome=outcome, hit=hit, delta=delta, win_prob=win_prob, rand_val=rand_val)
     cue.to_dict(trial_data)
 
-    # update controller (may flip mapping & increment reversal_count)
     controller.update(hit)
 
-    make_unit(unit_label="blank") \
-        .add_stim(stim_bank.get("blank")) \
-        .show(
-            duration=settings.blank_duration) \
-        .to_dict(trial_data)
+    make_unit(unit_label="blank").add_stim(stim_bank.get("blank")).show(duration=settings.blank_duration).to_dict(trial_data)
 
-    # 5) Feedback display
-    fb = make_unit(unit_label="feedback") \
-        .add_stim(stim_bank.get(f"{outcome}_feedback")) \
-        .show(
-            duration=settings.feedback_duration,
-            onset_trigger=settings.triggers.get(f"{outcome}_feedback_onset")+marker_pad,
-        )
-    fb.to_dict(trial_data)
+    # feedback
+    make_unit(unit_label="feedback").add_stim(stim_bank.get(f"{outcome}_feedback")).show(
+        duration=settings.feedback_duration,
+        onset_trigger=settings.triggers.get(f"{outcome}_feedback_onset") + marker_pad,
+    ).to_dict(trial_data)
 
     return trial_data
-
