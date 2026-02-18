@@ -5,7 +5,7 @@ import numpy as np
 from psyflow import StimUnit, set_trial_context
 from .utils import Controller
 
-# trial stages in contract order: cue -> anticipation -> target -> feedback
+# trial stages use task-specific phase labels via set_trial_context(...)
 _TRIAL_COUNTER = 0
 
 
@@ -43,18 +43,18 @@ def run_trial(
     make_unit = partial(StimUnit, win=win, kb=kb, runtime=trigger_runtime)
     marker_pad = controller.reversal_count * 10
 
-    # cue
-    # anticipation
+    # phase: pre_choice_fixation
+    # phase: pre_choice_fixation
     fix_unit = make_unit(unit_label="fixation").add_stim(stim_bank.get("fixation"))
     set_trial_context(
         fix_unit,
         trial_id=trial_id,
-        phase="anticipation",
+        phase="pre_choice_fixation",
         deadline_s=_deadline_s(settings.fixation_duration),
         valid_keys=list(settings.key_list),
         block_id=block_id,
         condition_id=str(condition),
-        task_factors={"condition": str(condition), "stage": "fixation", "block_idx": block_idx},
+        task_factors={"condition": str(condition), "stage": "pre_choice_fixation", "block_idx": block_idx},
         stim_id="fixation",
     )
     fix_unit.show(
@@ -62,7 +62,7 @@ def run_trial(
         onset_trigger=settings.triggers.get("fixation_onset") + marker_pad,
     ).to_dict(trial_data)
 
-    # target
+    # phase: choice_response_window
     if condition == "AB":
         stima = stim_bank.rebuild("stima", pos=(-4, 0))
         stimb = stim_bank.rebuild("stimb", pos=(4, 0))
@@ -80,14 +80,14 @@ def run_trial(
     set_trial_context(
         cue,
         trial_id=trial_id,
-        phase="target",
+        phase="choice_response_window",
         deadline_s=_deadline_s(settings.cue_duration),
         valid_keys=list(settings.key_list),
         block_id=block_id,
         condition_id=str(condition),
         task_factors={
             "condition": str(condition),
-            "stage": "cue",
+            "stage": "choice_response_window",
             "current_correct": str(controller.current_correct),
             "reversal_count": int(controller.reversal_count),
             "block_idx": block_idx,
@@ -130,7 +130,7 @@ def run_trial(
 
     make_unit(unit_label="blank").add_stim(stim_bank.get("blank")).show(duration=settings.blank_duration).to_dict(trial_data)
 
-    # feedback
+    # outcome display
     make_unit(unit_label="feedback").add_stim(stim_bank.get(f"{outcome}_feedback")).show(
         duration=settings.feedback_duration,
         onset_trigger=settings.triggers.get(f"{outcome}_feedback_onset") + marker_pad,

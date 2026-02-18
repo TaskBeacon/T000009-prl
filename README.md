@@ -46,7 +46,7 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | 3. **Response Collection** | The participant has 1.5 seconds (`cue_duration`) to choose one of the images by pressing 'f' for the left or 'j' for the right. A highlight box appears around the selected image. |
 | 4. **Feedback Logic** | The outcome is determined probabilistically. If the correct stimulus is chosen, there is an 80% (`win_prob`) chance of winning +10 points and a 20% chance of losing 10 points. If the incorrect stimulus is chosen, the probabilities are reversed. No response results in a loss of 10 points. |
 | 5. **Blank Screen** | A blank screen is shown for a random duration between 0.4 and 0.6 seconds. |
-| 6. **Feedback Display** | The feedback ("+10�?, "-10�?, or "未反应：-10�?) is displayed for 0.8 seconds (`feedback_duration`). |
+| 6. **Feedback Display** | The feedback ("+10?, "-10?, or "未反应：-10?) is displayed for 0.8 seconds (`feedback_duration`). |
 | 7. **Controller Update** | The `Controller` is updated with the outcome of the trial (`hit` or `miss`). |
 
 ### Controller Logic (`utils.py`)
@@ -58,6 +58,12 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | **Reversal Trigger** | If the participant correctly identifies the higher-probability stimulus in at least 9 of the last 10 trials (`sliding_window_hits`), the reward probabilities are reversed. |
 | **State Tracking** | The controller tracks the `current_correct` stimulus ('stima' or 'stimb'), the `reversal_count`, and the history of hits within the current phase (`phase_hits`). |
 | **Win Probability** | The initial win probability is 80% (`win_prob`). After the first reversal, it changes to 90% (`rev_win_prob`). |
+
+### Runtime Context Phases
+| Phase Label | Meaning |
+|---|---|
+| `pre_choice_fixation` | pre choice fixation stage in `src/run_trial.py` responder context. |
+| `choice_response_window` | choice response window stage in `src/run_trial.py` responder context. |
 
 ## 3. Configuration Summary
 
@@ -87,9 +93,9 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | Name | Type | Description |
 |---|---|---|
 | `fixation` | text | A white '+' symbol. |
-| `win_feedback` | text | "+10�? in white. |
-| `lose_feedback` | text | "-10�? in white. |
-| `no_response_feedback`| text | "未反应：-10�? in white. |
+| `win_feedback` | text | "+10? in white. |
+| `lose_feedback` | text | "-10? in white. |
+| `no_response_feedback`| text | "未反应：-10? in white. |
 | `blank` | text | An empty text stimulus. |
 | `stima` | image | The first image in a pair, with a size of [5, 5] degrees. |
 | `stimb` | image | The second image in a pair, with a size of [5, 5] degrees. |
