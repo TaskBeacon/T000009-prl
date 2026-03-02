@@ -129,7 +129,7 @@ def run(options: TaskRunOptions):
             )
 
             block_trials = block.get_all_data()
-            score = sum(trial.get("cue_delta", 0) for trial in block_trials)
+            score = sum(trial.get("choice_delta", 0) for trial in block_trials)
             StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
                 stim_bank.get_and_format(
                     "block_break",
@@ -139,7 +139,7 @@ def run(options: TaskRunOptions):
                 )
             ).wait_and_continue()
 
-        total_score = sum(trial.get("cue_delta", 0) for trial in all_data)
+        total_score = sum(trial.get("choice_delta", 0) for trial in all_data)
         StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
             stim_bank.get_and_format("good_bye", total_score=total_score)
         ).wait_and_continue(terminate=True)

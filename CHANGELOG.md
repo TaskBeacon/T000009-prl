@@ -4,8 +4,27 @@ All notable development changes for T000009-prl are documented here.
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-03-02
+
+### Added
+- Added full literature contract bundle under `references/`:
+  - `references.yaml`
+  - `references.md`
+  - `parameter_mapping.md`
+  - `stimulus_mapping.md`
+  - `task_logic_audit.md`
+  - curated `selected_papers.json`
+
 ### Changed
-- Refactored `src/run_trial.py` to use `psyflow`'s native `next_trial_id()` and removed legacy internal `_next_trial_id` and `_deadline_s` boilerplate.
+- Refactored `src/run_trial.py` to use `psyflow` native `next_trial_id()` and removed legacy internal `_next_trial_id` and `_deadline_s` boilerplate.
+- Renamed choice-stage runtime label and config keys:
+  - `cue` -> `choice`
+  - `timing.cue_duration` -> `timing.choice_duration`
+  - `triggers.map.cue_onset` -> `triggers.map.choice_onset`
+- Updated block/total score aggregation keys in `main.py` from `cue_delta` to `choice_delta`.
+- Rewrote `config/config.yaml` and `config/config_qa.yaml` in clean UTF-8 to remove mojibake and align section structure.
+- Updated sampler responder to always progress instruction/block/goodbye screens in simulation mode.
+- Updated README terminology and trigger/timing labels to match runtime implementation.
 
 ## [1.1.1] - 2026-02-18
 - Refactored responder context phase names in `src/run_trial.py` to task-specific labels (removed generic MID-style phase naming).

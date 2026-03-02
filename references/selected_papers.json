@@ -1,0 +1,41 @@
+﻿[
+  {
+    "id": "W2159371292",
+    "title": "Feedback-related Negativity Codes Prediction Error but Not Behavioral Adjustment during Probabilistic Reversal Learning",
+    "year": 2010,
+    "journal": "Journal of Cognitive Neuroscience",
+    "doi": "10.1162/jocn.2010.21456",
+    "citation_count": 218,
+    "open_access": true,
+    "used_for": [
+      "prl_feedback_error_rationale",
+      "outcome_trigger_design"
+    ]
+  },
+  {
+    "id": "W2108312837",
+    "title": "Frontal Oscillatory Dynamics Predict Feedback Learning and Action Adjustment",
+    "year": 2011,
+    "journal": "Journal of Cognitive Neuroscience",
+    "doi": "10.1162/jocn_a_00110",
+    "citation_count": 182,
+    "open_access": true,
+    "used_for": [
+      "adaptive_choice_update_logic",
+      "choice_feedback_phase_structure"
+    ]
+  },
+  {
+    "id": "W2025693086",
+    "title": "Event-related potential studies of outcome processing and feedback-guided learning",
+    "year": 2012,
+    "journal": "Frontiers in Human Neuroscience",
+    "doi": "10.3389/fnhum.2012.00304",
+    "citation_count": 341,
+    "open_access": true,
+    "used_for": [
+      "eeg_outcome_processing_context",
+      "trial_timing_and_feedback_windows"
+    ]
+  }
+]

@@ -1,4 +1,4 @@
-﻿from functools import partial
+from functools import partial
 
 import numpy as np
 
@@ -21,11 +21,11 @@ def run_trial(
 ):
     """Run one PRL trial."""
     trial_id = next_trial_id()
-    trial_data = {"condition": condition}
+    condition_id = str(condition)
+    trial_data = {"condition": condition_id}
     make_unit = partial(StimUnit, win=win, kb=kb, runtime=trigger_runtime)
     marker_pad = controller.reversal_count * 10
 
-    # phase: pre_choice_fixation
     # phase: pre_choice_fixation
     fix_unit = make_unit(unit_label="fixation").add_stim(stim_bank.get("fixation"))
     set_trial_context(
@@ -35,8 +35,8 @@ def run_trial(
         deadline_s=settings.fixation_duration,
         valid_keys=list(settings.key_list),
         block_id=block_id,
-        condition_id=str(condition),
-        task_factors={"condition": str(condition), "stage": "pre_choice_fixation", "block_idx": block_idx},
+        condition_id=condition_id,
+        task_factors={"condition": condition_id, "stage": "pre_choice_fixation", "block_idx": block_idx},
         stim_id="fixation",
     )
     fix_unit.show(
@@ -45,7 +45,7 @@ def run_trial(
     ).to_dict(trial_data)
 
     # phase: choice_response_window
-    if condition == "AB":
+    if condition_id == "AB":
         stima = stim_bank.rebuild("stima", pos=(-4, 0))
         stimb = stim_bank.rebuild("stimb", pos=(4, 0))
     else:
@@ -53,22 +53,22 @@ def run_trial(
         stima = stim_bank.rebuild("stima", pos=(4, 0))
 
     if controller.current_correct == "stima":
-        correct_side = "left" if condition == "AB" else "right"
+        correct_side = "left" if condition_id == "AB" else "right"
     else:
-        correct_side = "left" if condition == "BA" else "right"
+        correct_side = "left" if condition_id == "BA" else "right"
     correct_key = settings.left_key if correct_side == "left" else settings.right_key
 
-    cue = make_unit(unit_label="cue").add_stim(stima).add_stim(stimb)
+    choice_unit = make_unit(unit_label="choice").add_stim(stima).add_stim(stimb)
     set_trial_context(
-        cue,
+        choice_unit,
         trial_id=trial_id,
         phase="choice_response_window",
-        deadline_s=settings.cue_duration,
+        deadline_s=settings.choice_duration,
         valid_keys=list(settings.key_list),
         block_id=block_id,
-        condition_id=str(condition),
+        condition_id=condition_id,
         task_factors={
-            "condition": str(condition),
+            "condition": condition_id,
             "stage": "choice_response_window",
             "current_correct": str(controller.current_correct),
             "reversal_count": int(controller.reversal_count),
@@ -76,11 +76,11 @@ def run_trial(
         },
         stim_id="choice_pair",
     )
-    cue.capture_response(
+    choice_unit.capture_response(
         keys=settings.key_list,
         correct_keys=correct_key,
-        duration=settings.cue_duration,
-        onset_trigger=settings.triggers.get("cue_onset") + marker_pad,
+        duration=settings.choice_duration,
+        onset_trigger=settings.triggers.get("choice_onset") + marker_pad,
         response_trigger=settings.triggers.get("key_press") + marker_pad,
         timeout_trigger=settings.triggers.get("no_response") + marker_pad,
         terminate_on_response=False,
@@ -88,11 +88,11 @@ def run_trial(
         dynamic_highlight=False,
     )
 
-    respond = cue.get_state("key_press", False)
+    respond = choice_unit.get_state("key_press", False)
     win_prob = controller.get_win_prob()
     if respond:
         rand_val = np.random.rand()
-        hit = cue.get_state("hit", False)
+        hit = choice_unit.get_state("hit", False)
         if hit:
             outcome = "win" if rand_val < win_prob else "lose"
             delta = settings.delta if rand_val < win_prob else settings.delta * -1
@@ -105,8 +105,8 @@ def run_trial(
         hit = False
         rand_val = np.nan
 
-    cue.set_state(outcome=outcome, hit=hit, delta=delta, win_prob=win_prob, rand_val=rand_val)
-    cue.to_dict(trial_data)
+    choice_unit.set_state(outcome=outcome, hit=hit, delta=delta, win_prob=win_prob, rand_val=rand_val)
+    choice_unit.to_dict(trial_data)
 
     controller.update(hit)
 

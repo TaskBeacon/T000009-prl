@@ -43,10 +43,10 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 |---|---|
 | 1. **Fixation** | A fixation cross (`+`) is displayed for a random duration between 0.6 and 0.8 seconds. |
 | 2. **Cue Presentation** | Two images (`stima` and `stimb`) are presented on the left and right sides of the screen. The positions are determined by the `condition` (`AB` or `BA`). |
-| 3. **Response Collection** | The participant has 1.5 seconds (`cue_duration`) to choose one of the images by pressing 'f' for the left or 'j' for the right. A highlight box appears around the selected image. |
+| 3. **Response Collection** | The participant has 1.5 seconds (`choice_duration`) to choose one of the images by pressing 'f' for the left or 'j' for the right. A highlight box appears around the selected image. |
 | 4. **Feedback Logic** | The outcome is determined probabilistically. If the correct stimulus is chosen, there is an 80% (`win_prob`) chance of winning +10 points and a 20% chance of losing 10 points. If the incorrect stimulus is chosen, the probabilities are reversed. No response results in a loss of 10 points. |
 | 5. **Blank Screen** | A blank screen is shown for a random duration between 0.4 and 0.6 seconds. |
-| 6. **Feedback Display** | The feedback ("+10?, "-10?, or "未反应：-10?) is displayed for 0.8 seconds (`feedback_duration`). |
+| 6. **Feedback Display** | The feedback (`+10分`, `-10分`, or `未反应：-10分`) is displayed for 0.8 seconds (`feedback_duration`). |
 | 7. **Controller Update** | The `Controller` is updated with the outcome of the trial (`hit` or `miss`). |
 
 ### Controller Logic (`utils.py`)
@@ -93,9 +93,9 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | Name | Type | Description |
 |---|---|---|
 | `fixation` | text | A white '+' symbol. |
-| `win_feedback` | text | "+10? in white. |
-| `lose_feedback` | text | "-10? in white. |
-| `no_response_feedback`| text | "未反应：-10? in white. |
+| `win_feedback` | text | `+10分` in white. |
+| `lose_feedback` | text | `-10分` in white. |
+| `no_response_feedback`| text | `未反应：-10分` in white. |
 | `blank` | text | An empty text stimulus. |
 | `stima` | image | The first image in a pair, with a size of [5, 5] degrees. |
 | `stimb` | image | The second image in a pair, with a size of [5, 5] degrees. |
@@ -110,7 +110,7 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | Phase | Duration (seconds) |
 |---|---|
 | `fixation_duration` | [0.6, 0.8] (randomized) |
-| `cue_duration` | 1.5 |
+| `choice_duration` | 1.5 |
 | `feedback_duration` | 0.8 |
 | `blank_duration` | [0.4, 0.6] (randomized) |
 
@@ -123,7 +123,7 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 | `block_onset` | 100 |
 | `block_end` | 101 |
 | `fixation_onset` | 1 |
-| `cue_onset` | 2 |
+| `choice_onset` | 2 |
 | `key_press` | 3 |
 | `no_response` | 4 |
 | `win_feedback_onset` | 5 |

@@ -1,5 +1,10 @@
-# config.yaml
-# === Subject info ===
+﻿# ============================================================================
+# QA config (dev + qa)
+# - Used by: python main.py qa --config config/config_qa.yaml
+# - Scope: qa/dev only (no sim section in this file)
+# ============================================================================
+
+# === Subject Form ===========================================================
 subinfo_fields:
   - name: subject_id
     type: int
@@ -7,67 +12,71 @@ subinfo_fields:
       min: 101
       max: 999
       digits: 3
-
-  - name: subname    
+  - name: subname
     type: string
-
-  - name: age 
+  - name: age
     type: int
     constraints:
       min: 5
       max: 60
-
   - name: gender
     type: choice
-    choices: [Male, Female]
+    choices:
+      - Male
+      - Female
 
+# === Subject Mapping ========================================================
 subinfo_mapping:
-    subject_id: "被试号"
-    subname: "被试姓名(拼音)"
-    age: "年龄"
-    gender: "性别"
-    Male: "男"
-    Female: "女"
-    registration_failed: "注册失败。"
-    registration_successful: "注册成功！"
-    invalid_input: "字段 {field} 输入无效"
+  subject_id: 被试号
+  subname: 被试姓名(拼音)
+  age: 年龄
+  gender: 性别
+  Male: 男
+  Female: 女
+  registration_failed: 注册失败。
+  registration_successful: 注册成功！
+  invalid_input: "字段 {field} 输入无效"
 
-
-# === Window settings ===
+# === Display / Window =======================================================
 window:
-  size: [1920, 1080]
+  size:
+    - 1920
+    - 1080
   units: deg
   screen: 1
   bg_color: gray
-  fullscreen: True
+  fullscreen: true
   monitor_width_cm: 60
   monitor_distance_cm: 72
 
-# === Task-level settings ===
+# === Task ===================================================================
 task:
-  task_name: "eeg_prl"
+  task_name: eeg_prl
   save_path: ./outputs/qa
-  language: "Chinese"
-  voice_name: "zh-CN-YunyangNeural"
+  language: Chinese
+  voice_name: zh-CN-YunyangNeural
+  voice_enabled: false
   total_blocks: 1
   total_trials: 24
   trial_per_block: 24
-  conditions: [AB, BA]
-  key_list: [f, j]
+  conditions:
+    - AB
+    - BA
+  key_list:
+    - f
+    - j
   left_key: f
   right_key: j
-  delta: 10 # points unit
-  voice_enabled: false
-  seed_mode: "same_across_sub"
+  delta: 10
+  seed_mode: same_across_sub
 
-
-# === Stimuli  === 
+# === Stimuli ================================================================
 stimuli:
   fixation:
     type: text
     text: "+"
     color: white
-  
+
   win_feedback:
     type: text
     text: "+10分"
@@ -77,116 +86,110 @@ stimuli:
     type: text
     text: "-10分"
     color: white
-  
-  no_response_feedback: 
+
+  no_response_feedback:
     type: text
     text: "未反应：-10分"
     color: white
-  
+
   blank:
     type: text
     text: ""
     color: white
-    
 
   stima:
     type: image
     image: ./assets/nushu_stroke5_000_U1B1A8.png
-    size: [5, 5]
-  
+    size:
+      - 5
+      - 5
+
   stimb:
     type: image
     image: ./assets/nushu_stroke5_002_U1B1AA.png
-    size: [5, 5]
+    size:
+      - 5
+      - 5
 
   highlight_left:
     type: rect
-    lineColor: 'white'
+    lineColor: white
     lineWidth: 3
-    fillColor: None
-    pos: [-4, -0.3]
+    fillColor: null
+    pos:
+      - -4
+      - -0.3
     width: 3
     height: 4
 
   highlight_right:
     type: rect
-    lineColor: 'white'
+    lineColor: white
     lineWidth: 3
-    fillColor: None
-    pos: [4, -0.3]
+    fillColor: null
+    pos:
+      - 4
+      - -0.3
     width: 3
     height: 4
 
   block_break:
     type: text
     text: |
+      质检分段结束
       得分：{score} 分
 
-      请在充分休息后按下空格键
-      进入下一个部分
+      按【空格键】继续
     color: white
     height: 0.78
 
-  
   instruction_text:
     type: textbox
     text: |
-      【奖赏学习任务】
+      【PRL 质检模式】
 
-      在本任务中，您将看到屏幕上同时出现两个图形
-      
-      左手食指按下 【F】 键 选择左侧图形
-      右手食指按下 【J】 键 选择右侧图形
+      F键选择左侧图形，J键选择右侧图形。
+      根据反馈持续调整策略。
 
-      每个图形都有一定的获胜概率：
-       一开始，某一图形的获胜概率较高
-       但请注意，随着任务进行
-       图形的获胜概率可能会发生变化！
-
-      您的目标是：
-      找出当前更可能获胜的图形，得到更多的分数
-      当规则变化时，及时调整您的选择策略
-
-      请尽量根据反馈信息灵活调整判断
-      并尽可能准确地选择当前最佳的图形
-
-      准备好后，请按【空格键】开始任务
-
+      按【空格键】开始。
     color: white
     font: SimHei
     alignment: center
     letterHeight: 0.78
     units: deg
-    size: [20, 5]
+    size:
+      - 20
+      - 5
 
   good_bye:
     type: text
     text: |
-      【任务结束】
+      质检完成。
       最终得分：{total_score} 分
-      感谢您的参与！
-      请按【空格键】退出任务。
+      按【空格键】退出。
     color: white
     font: SimHei
 
-# === Timing & Adaptivity ===
+# === Timing =================================================================
 timing:
-  fixation_duration: [0.6, 0.8]
-  cue_duration: 1.5
+  fixation_duration:
+    - 0.6
+    - 0.8
+  choice_duration: 1.5
   feedback_duration: 0.8
-  blank_duration: [0.4, 0.6]
- 
+  blank_duration:
+    - 0.4
+    - 0.6
 
+# === Triggers ===============================================================
 triggers:
   map:
     exp_onset: 98
     exp_end: 99
-
     block_onset: 100
     block_end: 101
-
     fixation_onset: 1
-    cue_onset: 2
+    choice_onset: 2
     key_press: 3
     no_response: 4
     win_feedback_onset: 5
@@ -198,7 +201,11 @@ triggers:
     url: loop://
     baudrate: 115200
     timeout: 1
-    prefix: [1, 225, 1, 0]
+    prefix:
+      - 1
+      - 225
+      - 1
+      - 0
 
   policy:
     strict: false
@@ -206,13 +213,14 @@ triggers:
   timing:
     post_delay_s: 0.001
 
-
+# === Controller =============================================================
 controller:
   win_prob: 0.8
   rev_win_prob: 0.9
   sliding_window: 10
   sliding_window_hits: 9
 
+# === QA Runtime =============================================================
 qa:
   output_dir: outputs/qa
   enable_scaling: true
@@ -223,6 +231,9 @@ qa:
   acceptance_criteria:
     required_columns:
       - condition
+      - choice_onset_trigger
     expected_trial_count: 24
-    allowed_keys: [f, j]
+    allowed_keys:
+      - f
+      - j
     triggers_required: true
