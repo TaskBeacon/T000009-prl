@@ -1,0 +1,109 @@
+{
+  "task_plot_spec": {
+    "spec_version": "0.2",
+    "meta": {
+      "task_name": "Probabilistic Reversal Learning (PRL) Task",
+      "mode": "existing",
+      "task_id": ""
+    },
+    "figure": {
+      "output": {
+        "filename": "task_flow.png",
+        "dpi": 300,
+        "width_in": 16.0,
+        "background": "white"
+      },
+      "layout": {
+        "max_conditions": 4,
+        "screens_per_timeline": 6,
+        "screen_overlap_ratio": 0.1,
+        "screen_slope": 0.08,
+        "screen_slope_deg": 25.0,
+        "timeline_gap": 0.18,
+        "screen_aspect_ratio": 1.4545454545454546,
+        "left_margin": 0.2,
+        "right_margin": 0.03,
+        "top_margin": 0.03,
+        "bottom_margin": 0.05,
+        "condition_label_gap": 0.014,
+        "phase_label_pad": 0.01,
+        "duration_label_gap": 0.006,
+        "timeline_arrow_gap": 0.01,
+        "timeline_arrow_screen_clearance": 0.007,
+        "timeline_arrow_text_clearance": 0.01,
+        "timeline_arrow_extra_per_screen": 0.015,
+        "timeline_arrow_min_y": 0.02,
+        "timeline_arrow_max_y": 0.96
+      }
+    },
+    "timelines": [
+      {
+        "condition": "AB",
+        "display_condition_label": "AB",
+        "phases": [
+          {
+            "phase_name": "pre choice fixation",
+            "display_phase_label": "Fixation",
+            "duration_ms": {
+              "range": [
+                600,
+                800
+              ]
+            },
+            "response_window_ms": null,
+            "display_timing_label": "600-800 ms",
+            "stim_ids": [
+              "fixation"
+            ],
+            "stimulus_example": {
+              "summary": "+",
+              "modality": "visual",
+              "draw_hint": "text",
+              "render_items": [
+                {
+                  "kind": "text",
+                  "text": "+",
+                  "color": "white",
+                  "pos": null,
+                  "height": null
+                }
+              ]
+            },
+            "notes": ""
+          },
+          {
+            "phase_name": "choice response window",
+            "display_phase_label": "Choice",
+            "duration_ms": {
+              "fixed": 1500
+            },
+            "response_window_ms": {
+              "fixed": 1500
+            },
+            "display_timing_label": "1500 ms",
+            "stim_ids": [
+              "choice_pair"
+            ],
+            "stimulus_example": {
+              "summary": "[dynamic:choice_pair]",
+              "modality": "other",
+              "draw_hint": "annotation",
+              "render_items": [
+                {
+                  "kind": "annotation",
+                  "text": "Dynamic: choice_pair"
+                }
+              ]
+            },
+            "notes": ""
+          }
+        ],
+        "condition_variants": [
+          "BA"
+        ],
+        "display_condition_note": "Also: BA"
+      }
+    ],
+    "legend": []
+  }
+}
