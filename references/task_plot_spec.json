@@ -11,11 +11,12 @@
         "filename": "task_flow.png",
         "dpi": 300,
         "width_in": 16.0,
-        "background": "white"
+        "background": "white",
+        "auto_width": false
       },
       "layout": {
-        "max_conditions": 4,
-        "screens_per_timeline": 6,
+        "max_conditions": 2,
+        "screens_per_timeline": 4,
         "screen_overlap_ratio": 0.1,
         "screen_slope": 0.08,
         "screen_slope_deg": 25.0,
@@ -69,7 +70,7 @@
                 }
               ]
             },
-            "notes": ""
+            "notes": "????????? 600-800 ms??????????"
           },
           {
             "phase_name": "choice response window",
@@ -82,26 +83,200 @@
             },
             "display_timing_label": "1500 ms",
             "stim_ids": [
-              "choice_pair"
+              "stima",
+              "stimb"
             ],
             "stimulus_example": {
-              "summary": "[dynamic:choice_pair]",
+              "summary": "?? stima | ?? stimb",
+              "modality": "visual",
+              "draw_hint": "image_ref",
+              "render_items": [
+                {
+                  "kind": "image_ref",
+                  "path": "E:\\xhmhc\\TaskBeacon\\benchmark\\runs\\task_plot_redo\\T000009-prl\\references\\choice_pair_AB.png",
+                  "label": "Choice Pair AB"
+                }
+              ]
+            },
+            "notes": "AB ?????? stima???? stimb??????????????"
+          },
+          {
+            "phase_name": "blank screen",
+            "display_phase_label": "Blank",
+            "duration_ms": {
+              "range": [
+                400,
+                600
+              ]
+            },
+            "response_window_ms": null,
+            "display_timing_label": "400-600 ms",
+            "stim_ids": [
+              "blank"
+            ],
+            "stimulus_example": {
+              "summary": "????",
+              "modality": "visual",
+              "draw_hint": "text",
+              "render_items": [
+                {
+                  "kind": "text",
+                  "text": "",
+                  "color": "white",
+                  "pos": null,
+                  "height": null
+                }
+              ]
+            },
+            "notes": "???????????? `blank` ?????"
+          },
+          {
+            "phase_name": "feedback",
+            "display_phase_label": "Feedback",
+            "duration_ms": {
+              "fixed": 800
+            },
+            "response_window_ms": null,
+            "display_timing_label": "800 ms",
+            "stim_ids": [
+              "win_feedback",
+              "lose_feedback",
+              "no_response_feedback"
+            ],
+            "stimulus_example": {
+              "summary": "Reward plus 10 | Punishment minus 10 | No response minus 10",
               "modality": "other",
               "draw_hint": "annotation",
               "render_items": [
                 {
                   "kind": "annotation",
-                  "text": "Dynamic: choice_pair"
+                  "text": "Reward plus 10 | Punishment minus 10 | No response minus 10"
                 }
               ]
             },
-            "notes": ""
+            "notes": "Feedback text depends on the actual outcome and is shown for 800 ms."
           }
-        ],
-        "condition_variants": [
-          "BA"
-        ],
-        "display_condition_note": "Also: BA"
+        ]
+      },
+      {
+        "condition": "BA",
+        "display_condition_label": "BA",
+        "phases": [
+          {
+            "phase_name": "pre choice fixation",
+            "display_phase_label": "Fixation",
+            "duration_ms": {
+              "range": [
+                600,
+                800
+              ]
+            },
+            "response_window_ms": null,
+            "display_timing_label": "600-800 ms",
+            "stim_ids": [
+              "fixation"
+            ],
+            "stimulus_example": {
+              "summary": "+",
+              "modality": "visual",
+              "draw_hint": "text",
+              "render_items": [
+                {
+                  "kind": "text",
+                  "text": "+",
+                  "color": "white",
+                  "pos": null,
+                  "height": null
+                }
+              ]
+            },
+            "notes": "????????? 600-800 ms??????????"
+          },
+          {
+            "phase_name": "choice response window",
+            "display_phase_label": "Choice",
+            "duration_ms": {
+              "fixed": 1500
+            },
+            "response_window_ms": {
+              "fixed": 1500
+            },
+            "display_timing_label": "1500 ms",
+            "stim_ids": [
+              "stimb",
+              "stima"
+            ],
+            "stimulus_example": {
+              "summary": "?? stimb | ?? stima",
+              "modality": "visual",
+              "draw_hint": "image_ref",
+              "render_items": [
+                {
+                  "kind": "image_ref",
+                  "path": "E:\\xhmhc\\TaskBeacon\\benchmark\\runs\\task_plot_redo\\T000009-prl\\references\\choice_pair_BA.png",
+                  "label": "Choice Pair BA"
+                }
+              ]
+            },
+            "notes": "BA ?????? stimb???? stima??????? AB ???"
+          },
+          {
+            "phase_name": "blank screen",
+            "display_phase_label": "Blank",
+            "duration_ms": {
+              "range": [
+                400,
+                600
+              ]
+            },
+            "response_window_ms": null,
+            "display_timing_label": "400-600 ms",
+            "stim_ids": [
+              "blank"
+            ],
+            "stimulus_example": {
+              "summary": "????",
+              "modality": "visual",
+              "draw_hint": "text",
+              "render_items": [
+                {
+                  "kind": "text",
+                  "text": "",
+                  "color": "white",
+                  "pos": null,
+                  "height": null
+                }
+              ]
+            },
+            "notes": "???????????? `blank` ?????"
+          },
+          {
+            "phase_name": "feedback",
+            "display_phase_label": "Feedback",
+            "duration_ms": {
+              "fixed": 800
+            },
+            "response_window_ms": null,
+            "display_timing_label": "800 ms",
+            "stim_ids": [
+              "win_feedback",
+              "lose_feedback",
+              "no_response_feedback"
+            ],
+            "stimulus_example": {
+              "summary": "Reward plus 10 | Punishment minus 10 | No response minus 10",
+              "modality": "other",
+              "draw_hint": "annotation",
+              "render_items": [
+                {
+                  "kind": "annotation",
+                  "text": "Reward plus 10 | Punishment minus 10 | No response minus 10"
+                }
+              ]
+            },
+            "notes": "Feedback text depends on the actual outcome and is shown for 800 ms."
+          }
+        ]
       }
     ],
     "legend": []

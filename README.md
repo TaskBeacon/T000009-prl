@@ -21,7 +21,7 @@ This task implements a probabilistic reversal learning paradigm designed for EEG
 
 ## 2. Task Flow
 
-![Task flow](./task_flow.png)
+![Task Flow](task_flow.png)
 
 ### Block-Level Flow (`main.py`)
 
