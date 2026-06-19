@@ -70,7 +70,7 @@
                 }
               ]
             },
-            "notes": "????????? 600-800 ms??????????"
+            "notes": "A fixation cross is shown for 600-800 ms before the choice screen."
           },
           {
             "phase_name": "choice response window",
@@ -87,7 +87,7 @@
               "stimb"
             ],
             "stimulus_example": {
-              "summary": "?? stima | ?? stimb",
+              "summary": "left stima | right stimb",
               "modality": "visual",
               "draw_hint": "image_ref",
               "render_items": [
@@ -98,7 +98,7 @@
                 }
               ]
             },
-            "notes": "AB ?????? stima???? stimb??????????????"
+            "notes": "In AB trials, stima appears on the left and stimb appears on the right."
           },
           {
             "phase_name": "blank screen",
@@ -115,7 +115,7 @@
               "blank"
             ],
             "stimulus_example": {
-              "summary": "????",
+              "summary": "blank screen",
               "modality": "visual",
               "draw_hint": "text",
               "render_items": [
@@ -128,7 +128,7 @@
                 }
               ]
             },
-            "notes": "???????????? `blank` ?????"
+            "notes": "A blank interval separates the choice and outcome feedback."
           },
           {
             "phase_name": "feedback",
@@ -190,7 +190,7 @@
                 }
               ]
             },
-            "notes": "????????? 600-800 ms??????????"
+            "notes": "A fixation cross is shown for 600-800 ms before the choice screen."
           },
           {
             "phase_name": "choice response window",
@@ -207,7 +207,7 @@
               "stima"
             ],
             "stimulus_example": {
-              "summary": "?? stimb | ?? stima",
+              "summary": "left stimb | right stima",
               "modality": "visual",
               "draw_hint": "image_ref",
               "render_items": [
@@ -218,7 +218,7 @@
                 }
               ]
             },
-            "notes": "BA ?????? stimb???? stima??????? AB ???"
+            "notes": "In BA trials, stimb appears on the left and stima appears on the right."
           },
           {
             "phase_name": "blank screen",
@@ -235,7 +235,7 @@
               "blank"
             ],
             "stimulus_example": {
-              "summary": "????",
+              "summary": "blank screen",
               "modality": "visual",
               "draw_hint": "text",
               "render_items": [
@@ -248,7 +248,7 @@
                 }
               ]
             },
-            "notes": "???????????? `blank` ?????"
+            "notes": "A blank interval separates the choice and outcome feedback."
           },
           {
             "phase_name": "feedback",

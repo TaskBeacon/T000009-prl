@@ -34,7 +34,7 @@
   - No custom generator is required; trial semantics are representable by side-assignment condition tokens.
   - Generated condition data shape passed into `run_trial.py`: scalar token (`AB` or `BA`).
 - Runtime-generated trial values (if any):
-  - Reward outcome sampled each trial by `np.random.rand()` using controller-dependent win probability.
+  - Reward outcome sampled each trial by `sample_reward_draw()` using block seed, condition, trial ID, and reversal count so repeated seeded runs are reproducible.
   - Trigger pad is derived from `controller.reversal_count` to mark reversal epochs.
 
 ### Trial State Machine
@@ -137,7 +137,7 @@ Reversal pad rule:
 
 - `main.py` runtime flow style: single mode-aware flow (`human|qa|sim`) with shared setup order.
 - `utils.py` used?: yes.
-- If yes, exact purpose: `Controller` encapsulates reversal-state updates and win-probability policy.
+- If yes, exact purpose: `Controller` encapsulates reversal-state updates and win-probability policy; `sample_reward_draw()` keeps probabilistic feedback reproducible from stable trial metadata.
 - Custom controller used?: yes.
 - If yes, why PsyFlow-native path is insufficient: reversal criterion depends on rolling hit history and dynamic latent mapping.
 - Legacy/backward-compatibility fallback logic required?: no.

@@ -1,4 +1,29 @@
-﻿from psychopy import logging
+import random
+
+from psychopy import logging
+
+
+def _condition_hash(condition: str) -> int:
+    return sum((idx + 1) * ord(ch) for idx, ch in enumerate(condition))
+
+
+def sample_reward_draw(settings, condition: str, block_idx: int | None, trial_id: int, reversal_count: int) -> tuple[float, int]:
+    """Draw a deterministic reward sample from the task seed and trial metadata."""
+    block_index = int(block_idx or 0)
+    block_seed = 0
+    block_seeds = getattr(settings, "block_seed", None)
+    if isinstance(block_seeds, list) and 0 <= block_index < len(block_seeds):
+        seed_value = block_seeds[block_index]
+        if seed_value is not None:
+            block_seed = int(seed_value)
+
+    rng_seed = (
+        block_seed
+        + _condition_hash(str(condition))
+        + int(trial_id) * 1009
+        + int(reversal_count) * 100_003
+    )
+    return random.Random(rng_seed).random(), rng_seed
 
 
 class Controller:

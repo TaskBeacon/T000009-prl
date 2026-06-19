@@ -4,6 +4,11 @@ All notable development changes for T000009-prl are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- Seeded probabilistic reward sampling from block seed and trial metadata so PRL outcomes are reproducible under identical configs.
+- Added trial context for blank and feedback phases, including outcome, reward draw, and reward seed metadata.
+- Replaced mojibake in task plot YAML/JSON notes and summaries with readable phase descriptions.
+
 ## [1.1.2] - 2026-03-02
 
 ### Added

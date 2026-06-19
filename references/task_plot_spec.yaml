@@ -56,7 +56,7 @@ task_plot_spec:
           color: white
           pos: null
           height: null
-      notes: ????????? 600-800 ms??????????
+      notes: A fixation cross is shown for 600-800 ms before the choice screen.
     - phase_name: choice response window
       display_phase_label: Choice
       duration_ms:
@@ -68,14 +68,14 @@ task_plot_spec:
       - stima
       - stimb
       stimulus_example:
-        summary: ?? stima | ?? stimb
+        summary: left stima | right stimb
         modality: visual
         draw_hint: image_ref
         render_items:
         - kind: image_ref
           path: E:\xhmhc\TaskBeacon\benchmark\runs\task_plot_redo\T000009-prl\references\choice_pair_AB.png
           label: Choice Pair AB
-      notes: AB ?????? stima???? stimb??????????????
+      notes: In AB trials, stima appears on the left and stimb appears on the right.
     - phase_name: blank screen
       display_phase_label: Blank
       duration_ms:
@@ -87,7 +87,7 @@ task_plot_spec:
       stim_ids:
       - blank
       stimulus_example:
-        summary: ????
+        summary: blank screen
         modality: visual
         draw_hint: text
         render_items:
@@ -96,7 +96,7 @@ task_plot_spec:
           color: white
           pos: null
           height: null
-      notes: ???????????? `blank` ?????
+      notes: A blank interval separates the choice and outcome feedback.
     - phase_name: feedback
       display_phase_label: Feedback
       duration_ms:
@@ -138,7 +138,7 @@ task_plot_spec:
           color: white
           pos: null
           height: null
-      notes: ????????? 600-800 ms??????????
+      notes: A fixation cross is shown for 600-800 ms before the choice screen.
     - phase_name: choice response window
       display_phase_label: Choice
       duration_ms:
@@ -150,14 +150,14 @@ task_plot_spec:
       - stimb
       - stima
       stimulus_example:
-        summary: ?? stimb | ?? stima
+        summary: left stimb | right stima
         modality: visual
         draw_hint: image_ref
         render_items:
         - kind: image_ref
           path: E:\xhmhc\TaskBeacon\benchmark\runs\task_plot_redo\T000009-prl\references\choice_pair_BA.png
           label: Choice Pair BA
-      notes: BA ?????? stimb???? stima??????? AB ???
+      notes: In BA trials, stimb appears on the left and stima appears on the right.
     - phase_name: blank screen
       display_phase_label: Blank
       duration_ms:
@@ -169,7 +169,7 @@ task_plot_spec:
       stim_ids:
       - blank
       stimulus_example:
-        summary: ????
+        summary: blank screen
         modality: visual
         draw_hint: text
         render_items:
@@ -178,7 +178,7 @@ task_plot_spec:
           color: white
           pos: null
           height: null
-      notes: ???????????? `blank` ?????
+      notes: A blank interval separates the choice and outcome feedback.
     - phase_name: feedback
       display_phase_label: Feedback
       duration_ms:

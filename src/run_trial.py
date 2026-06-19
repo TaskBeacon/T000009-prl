@@ -1,9 +1,7 @@
 from functools import partial
 
-import numpy as np
-
 from psyflow import StimUnit, set_trial_context, next_trial_id
-from .utils import Controller
+from .utils import Controller, sample_reward_draw
 
 # trial stages use task-specific phase labels via set_trial_context(...)
 
@@ -90,8 +88,16 @@ def run_trial(
 
     respond = choice_unit.get_state("key_press", False)
     win_prob = controller.get_win_prob()
+    rand_val = None
+    reward_seed = None
     if respond:
-        rand_val = np.random.rand()
+        rand_val, reward_seed = sample_reward_draw(
+            settings,
+            condition=condition_id,
+            block_idx=block_idx,
+            trial_id=trial_id,
+            reversal_count=controller.reversal_count,
+        )
         hit = choice_unit.get_state("hit", False)
         if hit:
             outcome = "win" if rand_val < win_prob else "lose"
@@ -103,19 +109,72 @@ def run_trial(
         outcome = "no_response"
         delta = settings.delta * -1
         hit = False
-        rand_val = np.nan
 
-    choice_unit.set_state(outcome=outcome, hit=hit, delta=delta, win_prob=win_prob, rand_val=rand_val)
+    choice_unit.set_state(
+        outcome=outcome,
+        hit=hit,
+        delta=delta,
+        win_prob=win_prob,
+        rand_val=rand_val,
+        reward_seed=reward_seed,
+    )
     choice_unit.to_dict(trial_data)
 
     controller.update(hit)
 
-    make_unit(unit_label="blank").add_stim(stim_bank.get("blank")).show(duration=settings.blank_duration).to_dict(trial_data)
+    blank_unit = make_unit(unit_label="blank").add_stim(stim_bank.get("blank"))
+    set_trial_context(
+        blank_unit,
+        trial_id=trial_id,
+        phase="blank_screen",
+        deadline_s=settings.blank_duration,
+        valid_keys=[],
+        block_id=block_id,
+        condition_id=condition_id,
+        task_factors={
+            "condition": condition_id,
+            "stage": "blank_screen",
+            "current_correct": str(controller.current_correct),
+            "reversal_count": int(controller.reversal_count),
+            "outcome": outcome,
+            "hit": bool(hit),
+            "win_prob": float(win_prob),
+            "rand_val": rand_val,
+            "reward_seed": reward_seed,
+            "block_idx": block_idx,
+        },
+        stim_id="blank",
+    )
+    blank_unit.show(duration=settings.blank_duration).to_dict(trial_data)
 
     # outcome display
-    make_unit(unit_label="feedback").add_stim(stim_bank.get(f"{outcome}_feedback")).show(
+    feedback_stim_id = f"{outcome}_feedback"
+    feedback_unit = make_unit(unit_label="feedback").add_stim(stim_bank.get(feedback_stim_id))
+    set_trial_context(
+        feedback_unit,
+        trial_id=trial_id,
+        phase="feedback",
+        deadline_s=settings.feedback_duration,
+        valid_keys=[],
+        block_id=block_id,
+        condition_id=condition_id,
+        task_factors={
+            "condition": condition_id,
+            "stage": "feedback",
+            "current_correct": str(controller.current_correct),
+            "reversal_count": int(controller.reversal_count),
+            "outcome": outcome,
+            "hit": bool(hit),
+            "win_prob": float(win_prob),
+            "rand_val": rand_val,
+            "reward_seed": reward_seed,
+            "block_idx": block_idx,
+        },
+        stim_id=feedback_stim_id,
+    )
+    feedback_unit.show(
         duration=settings.feedback_duration,
-        onset_trigger=settings.triggers.get(f"{outcome}_feedback_onset") + marker_pad,
+        onset_trigger=settings.triggers.get(f"{feedback_stim_id}_onset") + marker_pad,
     ).to_dict(trial_data)
 
     return trial_data
